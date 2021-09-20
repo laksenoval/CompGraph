@@ -1,0 +1,71 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace lab2
+{
+    public partial class Form3 : Form
+    {
+        public Form3()
+        {
+            InitializeComponent();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            // фильтр форматов файлов
+            ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
+            // если в диалоге была нажата кнопка ОК
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // загружаем изображение
+                    pictureBox1.Image = new Bitmap(ofd.FileName);
+                }
+                catch // в случае ошибки выводим MessageBox
+                {
+                    MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Bitmap temp = new Bitmap(pictureBox1.Image);
+            Bitmap result = new Bitmap(temp.Width, temp.Height);
+            for (int i = 0; i < temp.Width; i++)
+            {
+                for (int j = 0; j < temp.Height; j++)
+                {
+                    Color pixel = temp.GetPixel(i, j);
+                    var newPixel1 = 0.299 * pixel.R + 0.587 * pixel.G + 0.114 * pixel.B;
+                    var newPixel =(int)(newPixel1 <= 255 ? newPixel1 : 255);
+                    result.SetPixel(i,j, Color.FromArgb(pixel.A,newPixel,newPixel,newPixel));
+                }
+            }
+
+            pictureBox2.Image = result;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Bitmap temp = new Bitmap(pictureBox1.Image);
+            Bitmap result = new Bitmap(temp.Width, temp.Height);
+            for (int i = 0; i < temp.Width; i++)
+            {
+                for (int j = 0; j < temp.Height; j++)
+                {
+                    Color pixel = temp.GetPixel(i, j);
+                    var newPixel1 = 0.2126 * pixel.R + 0.7152 * pixel.G + 0.0722 * pixel.B;
+                    var newPixel =(int)(newPixel1 <= 255 ? newPixel1 : 255);
+                    result.SetPixel(i,j, Color.FromArgb(pixel.A,newPixel,newPixel,newPixel));
+                }
+            }
+
+            pictureBox3.Image = result;
+        }
+        
+    }
+}

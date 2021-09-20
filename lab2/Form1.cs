@@ -22,5 +22,11 @@ namespace lab2
             Form2 Task3 = new Form2();
             Task3.Show();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form3 Task1 = new Form3();
+            Task1.Show();
+        }
     }
 }
