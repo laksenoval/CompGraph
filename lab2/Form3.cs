@@ -9,6 +9,63 @@ namespace lab2
         public Form3()
         {
             InitializeComponent();
+        } 
+        public Bitmap CalculateBarChart (Bitmap image)
+        {
+            int width = 768, height = 600;
+            Bitmap histogram = new Bitmap(width, height);
+            
+            int[] R = new int[256];
+            int[] G = new int[256];
+            int[] B = new int[256];
+            // собираем статистику для изображения
+            for (int i = 0; i < image.Width; ++i)
+            {
+                for (int j = 0; j < image.Height; ++j)
+                {
+                    Color color = image.GetPixel(i, j);
+                    R[color.R]++;
+                    G[color.G]++;
+                    B[color.B]++;
+                }
+            }
+
+            // находим самый высокий столбец, чтобы корректно масштабировать гистограмму по высоте
+            int max = 0;
+            for (int i = 0; i < 256; ++i)
+            {
+                if (R[i] > max)
+                    max = R[i];
+                if (G[i] > max)
+                    max = G[i];
+                if (B[i] > max)
+                    max = B[i];
+            }
+
+            // определяем коэффициент масштабирования по высоте
+            double point = (double) max / height;
+            // отрисовываем столбец за столбцом нашу гистограмму с учетом масштаба
+            for (int i = 0; i < width - 3; ++i)
+            {
+                for (int j = height - 1; j > height - R[i / 3] / point; --j)
+                {
+                    histogram.SetPixel(i, j, Color.Red);
+                }
+
+                ++i;
+                for (int j = height - 1; j > height - G[i / 3] / point; --j)
+                {
+                    histogram.SetPixel(i, j, Color.Green);
+                }
+
+                ++i;
+                for (int j = height - 1; j > height - B[i / 3] / point; --j)
+                {
+                    histogram.SetPixel(i, j, Color.Blue);
+                }
+            }
+            
+            return histogram;    
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -46,7 +103,9 @@ namespace lab2
                 }
             }
 
+            pictureBox5.Image = CalculateBarChart(result);
             pictureBox2.Image = result;
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -64,8 +123,8 @@ namespace lab2
                 }
             }
 
+            pictureBox6.Image = CalculateBarChart(result);
             pictureBox3.Image = result;
         }
-        
     }
 }

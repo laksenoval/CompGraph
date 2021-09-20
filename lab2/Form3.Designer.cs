@@ -42,10 +42,16 @@ namespace lab2
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox6)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox4
@@ -77,7 +83,8 @@ namespace lab2
             // 
             // pictureBox1
             // 
-            this.pictureBox1.ImageLocation = "C:\\Users\\катя\\Pictures\\VKjrjTk6tgk.jpg";
+            this.pictureBox1.Image = global::lab2.Properties.Resources.testPicture;
+            this.pictureBox1.ImageLocation = "";
             this.pictureBox1.Location = new System.Drawing.Point(208, 40);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(280, 212);
@@ -151,11 +158,51 @@ namespace lab2
             this.label4.TabIndex = 26;
             this.label4.Text = "Разность";
             // 
-            // Form2
+            // pictureBox5
+            // 
+            this.pictureBox5.Location = new System.Drawing.Point(494, 293);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(280, 212);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 27;
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Location = new System.Drawing.Point(780, 293);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(280, 212);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 28;
+            this.pictureBox6.TabStop = false;
+            // 
+            // label5
+            // 
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+            this.label5.Location = new System.Drawing.Point(780, 255);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(277, 34);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "sRGB";
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+            this.label6.Location = new System.Drawing.Point(493, 255);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(277, 34);
+            this.label6.TabIndex = 29;
+            this.label6.Text = "NTSC RGB";
+            // 
+            // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1072, 517);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.pictureBox6);
+            this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -173,8 +220,16 @@ namespace lab2
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+
+        private System.Windows.Forms.PictureBox pictureBox5;
 
         private System.Windows.Forms.Label label4;
 
