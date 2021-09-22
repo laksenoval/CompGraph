@@ -10,8 +10,8 @@ git clone https://github.com/Aelina29/CompGraph.git
 cd CompGraph
 Зашли в локальный репозиторий
 
-???????
-Создали ветку со своим именем
+git checkout -b Aelina
+Создали ветку со своим именем и переключились в нее
 
 *выполняем задание*
 
