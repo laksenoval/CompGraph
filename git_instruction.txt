@@ -18,10 +18,10 @@ git checkout -b Aelina
 git add .
 Добавили новые файлы
 
-git commit -m "Task 3 is ok"
-Написали сообщение
+git commit -m "firs version" -m "discription problems"
+Написали короткий комит и если надо длинное пояснение
 
-git push
+git push --set-upstream origin Aelina
 Положили новые файлы в репозиторий в свою ветку
 
 Вы можете делать много Add+Commit но один Push в конце.
