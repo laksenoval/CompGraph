@@ -10,7 +10,8 @@ namespace lab2
         {
             InitializeComponent();
         } 
-        public Bitmap CalculateBarChart (Bitmap image)
+        //Рисует гистограмму
+        public Bitmap createHistograms(Bitmap image)
         {
             int width = 768, height = 600;
             Bitmap histogram = new Bitmap(width, height);
@@ -18,10 +19,9 @@ namespace lab2
             int[] R = new int[256];
             int[] G = new int[256];
             int[] B = new int[256];
-            // собираем статистику для изображения
-            for (int i = 0; i < image.Width; ++i)
+            for (int i = 0; i < image.Width; i++)
             {
-                for (int j = 0; j < image.Height; ++j)
+                for (int j = 0; j < image.Height; j++)
                 {
                     Color color = image.GetPixel(i, j);
                     R[color.R]++;
@@ -30,36 +30,31 @@ namespace lab2
                 }
             }
 
-            // находим самый высокий столбец, чтобы корректно масштабировать гистограмму по высоте
+            // Масштабируем гистограммы
             int max = 0;
             for (int i = 0; i < 256; ++i)
             {
-                if (R[i] > max)
-                    max = R[i];
-                if (G[i] > max)
-                    max = G[i];
-                if (B[i] > max)
-                    max = B[i];
+                max = R[i] > max ? R[i] : max;
+                max = G[i] > max ? G[i] : max;
+                max = B[i] > max ? B[i] : max;
             }
-
-            // определяем коэффициент масштабирования по высоте
-            double point = (double) max / height;
-            // отрисовываем столбец за столбцом нашу гистограмму с учетом масштаба
+            
+            double index = (double) max / height;
             for (int i = 0; i < width - 3; ++i)
             {
-                for (int j = height - 1; j > height - R[i / 3] / point; --j)
+                for (int j = height - 1; j > height - R[i / 3] / index; --j)
                 {
                     histogram.SetPixel(i, j, Color.Red);
                 }
 
                 ++i;
-                for (int j = height - 1; j > height - G[i / 3] / point; --j)
+                for (int j = height - 1; j > height - G[i / 3] / index; --j)
                 {
                     histogram.SetPixel(i, j, Color.Green);
                 }
 
                 ++i;
-                for (int j = height - 1; j > height - B[i / 3] / point; --j)
+                for (int j = height - 1; j > height - B[i / 3] / index; --j)
                 {
                     histogram.SetPixel(i, j, Color.Blue);
                 }
@@ -67,6 +62,7 @@ namespace lab2
             
             return histogram;    
         }
+        //Открываем картинку с компьютера
         private void button1_Click(object sender, EventArgs e)
         {
             pictureBox2.Image = null;
@@ -75,24 +71,22 @@ namespace lab2
             pictureBox5.Image = null;
             pictureBox6.Image = null;
             OpenFileDialog ofd = new OpenFileDialog();
-            // фильтр форматов файлов
             ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
-            // если в диалоге была нажата кнопка ОК
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    // загружаем изображение
                     pictureBox1.Image = new Bitmap(ofd.FileName);
                 }
-                catch // в случае ошибки выводим MessageBox
+                catch 
                 {
-                    MessageBox.Show("Невозможно открыть выбранный файл", "Ошибка",
+                    MessageBox.Show("Can't open this file", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
+        //Перевод в NTSC RGB
         private void button2_Click(object sender, EventArgs e)
         {
             Bitmap temp = new Bitmap(pictureBox1.Image);
@@ -108,11 +102,12 @@ namespace lab2
                 }
             }
 
-            pictureBox5.Image = CalculateBarChart(result);
+            pictureBox5.Image = createHistograms(result);
             pictureBox2.Image = result;
             
         }
 
+        //Перевод в sRGB
         private void button3_Click(object sender, EventArgs e)
         {
             Bitmap temp = new Bitmap(pictureBox1.Image);
@@ -128,10 +123,11 @@ namespace lab2
                 }
             }
 
-            pictureBox6.Image = CalculateBarChart(result);
+            pictureBox6.Image = createHistograms(result);
             pictureBox3.Image = result;
         }
 
+        //Поиск разности
         private void button4_Click(object sender, EventArgs e)
         {
             Bitmap temp1 = new Bitmap(pictureBox2.Image);
@@ -143,11 +139,11 @@ namespace lab2
                 {
                     Color pixel1 = temp1.GetPixel(i, j);
                     Color pixel2 = temp2.GetPixel(i, j);
-                    //var newPixel1 = Math.Abs(pixel1.R-pixel2.R) + Math.Abs(pixel1.G-pixel2.G) + Math.Abs(pixel1.B-pixel2.B);
-                    //var newPixel =(int)(newPixel1 <= 255 ? newPixel1 : 255);
-                    //result.SetPixel(i,j, Color.FromArgb(255,newPixel,newPixel,newPixel));
+                    var newPixel1 = Math.Abs(pixel1.R-pixel2.R) + Math.Abs(pixel1.G-pixel2.G) + Math.Abs(pixel1.B-pixel2.B);
+                    var newPixel =(int)(newPixel1 <= 255 ? newPixel1 : 255);
+                    result.SetPixel(i,j, Color.FromArgb(255,newPixel,newPixel,newPixel));
                     //result.SetPixel(i,j, Color.FromArgb(255,Math.Abs(pixel1.R-pixel2.R),Math.Abs(pixel1.G-pixel2.G),Math.Abs(pixel1.B-pixel2.B)));
-                    result.SetPixel(i,j, Color.FromArgb(255,Math.Abs(pixel1.R-pixel2.R)*10,Math.Abs(pixel1.G-pixel2.G)*10,Math.Abs(pixel1.B-pixel2.B)*10));
+                    //result.SetPixel(i,j, Color.FromArgb(255,Math.Abs(pixel1.R-pixel2.R)*10,Math.Abs(pixel1.G-pixel2.G)*10,Math.Abs(pixel1.B-pixel2.B)*10));
                 }
             }
 
