@@ -36,8 +36,8 @@ namespace lab2
     }
     public partial class Form2 : Form
     {
-        RGB original_rgb;
-        HSV original_hsv;
+        //RGB original_rgb;
+        //HSV original_hsv;
 
         bool Equal(double x, double y, double eps = 0.0001)
         => Math.Abs(x - y) < eps;
@@ -58,15 +58,6 @@ namespace lab2
             else
                 textBox1.Text = "WRONG!!!";
             pictureBox1.Image = Image.FromFile("../../PicForTask3.jpg");
-            Bitmap bmp = (Bitmap)pictureBox1.Image;
-            Color c;
-            for (int y = 0; y < bmp.Height; y++)
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    c = bmp.GetPixel(x, y);
-                    original_rgb = new RGB(c.R / 255.0, c.G / 255.0, c.B / 255.0);
-                    original_hsv = RGB_HSV(original_rgb);
-                }
         }
 
         HSV RGB_HSV(RGB rgb)
@@ -148,7 +139,6 @@ namespace lab2
 
         void change_by_tracks()
         {
-            RGB modifided_rgb;
             double H = trackBar1.Value;
             double S = trackBar2.Value / 100.0;
             double V = trackBar3.Value / 100.0;
@@ -157,6 +147,8 @@ namespace lab2
                 for (int x = 0; x < bmp.Width; x++)
                 {
                     Color c = bmp.GetPixel(x, y);
+                    RGB original_rgb = new RGB(c.R / 255.0, c.G / 255.0, c.B / 255.0);
+                    HSV original_hsv = RGB_HSV(original_rgb);
                     HSV new_hsv = original_hsv;
                     new_hsv.h += H;
                     if (new_hsv.h > 360)
@@ -169,8 +161,11 @@ namespace lab2
                     new_hsv.v += V;
                     new_hsv.v = Math.Min(1, new_hsv.v);
                     new_hsv.v = Math.Max(0, new_hsv.v);
-                    modifided_rgb = HSV_RGB(new_hsv);
-                    bmp.SetPixel(x, y, Color.FromArgb(255, (int)modifided_rgb.r*255, (int)modifided_rgb.g*255, (int)modifided_rgb.b*255));
+                    RGB modifided_rgb = HSV_RGB(new_hsv);
+                    int h1 = (int)(modifided_rgb.r * 255);
+                    int h2 = (int)(modifided_rgb.g * 255);
+                    int h3 = (int)(modifided_rgb.b * 255);
+                    bmp.SetPixel(x, y, Color.FromArgb(255, h1, h2, h3));
                 }
             pictureBox1.Image = (Bitmap)bmp;
         }
