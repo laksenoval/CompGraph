@@ -46,6 +46,7 @@ namespace lab2
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox2)).BeginInit();
@@ -194,11 +195,22 @@ namespace lab2
             this.label6.TabIndex = 29;
             this.label6.Text = "NTSC RGB";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(23, 232);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(179, 58);
+            this.button4.TabIndex = 31;
+            this.button4.Text = "Разность";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1072, 517);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.pictureBox6);
@@ -224,6 +236,8 @@ namespace lab2
             ((System.ComponentModel.ISupportInitialize) (this.pictureBox6)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Button button4;
 
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.Label label5;

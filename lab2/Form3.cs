@@ -69,6 +69,11 @@ namespace lab2
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            pictureBox2.Image = null;
+            pictureBox3.Image = null;
+            pictureBox4.Image = null;
+            pictureBox5.Image = null;
+            pictureBox6.Image = null;
             OpenFileDialog ofd = new OpenFileDialog();
             // фильтр форматов файлов
             ofd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
@@ -125,6 +130,28 @@ namespace lab2
 
             pictureBox6.Image = CalculateBarChart(result);
             pictureBox3.Image = result;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Bitmap temp1 = new Bitmap(pictureBox2.Image);
+            Bitmap temp2 = new Bitmap(pictureBox3.Image);
+            Bitmap result = new Bitmap(temp1.Width, temp1.Height);
+            for (int i = 0; i < temp1.Width; i++)
+            {
+                for (int j = 0; j < temp1.Height; j++)
+                {
+                    Color pixel1 = temp1.GetPixel(i, j);
+                    Color pixel2 = temp2.GetPixel(i, j);
+                    //var newPixel1 = Math.Abs(pixel1.R-pixel2.R) + Math.Abs(pixel1.G-pixel2.G) + Math.Abs(pixel1.B-pixel2.B);
+                    //var newPixel =(int)(newPixel1 <= 255 ? newPixel1 : 255);
+                    //result.SetPixel(i,j, Color.FromArgb(255,newPixel,newPixel,newPixel));
+                    //result.SetPixel(i,j, Color.FromArgb(255,Math.Abs(pixel1.R-pixel2.R),Math.Abs(pixel1.G-pixel2.G),Math.Abs(pixel1.B-pixel2.B)));
+                    result.SetPixel(i,j, Color.FromArgb(255,Math.Abs(pixel1.R-pixel2.R)*10,Math.Abs(pixel1.G-pixel2.G)*10,Math.Abs(pixel1.B-pixel2.B)*10));
+                }
+            }
+
+            pictureBox4.Image = result;
         }
     }
 }
