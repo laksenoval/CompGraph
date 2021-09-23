@@ -36,6 +36,13 @@ namespace lab2
     }
     public partial class Form2 : Form
     {
+        RGB original_rgb;
+        HSV original_hsv;
+
+        bool Equal(double x, double y, double eps = 0.0001)
+        => Math.Abs(x - y) < eps;
+
+
         public Form2()
         {
             InitializeComponent();
@@ -43,137 +50,165 @@ namespace lab2
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            RGB rgb1 = new RGB(137.0, 15.0, 235.0);
+            HSV hsv = RGB_HSV(rgb1);
+            RGB rgb2 = HSV_RGB(hsv);
+            if (Equal(rgb1.r, rgb2.r) && Equal(rgb1.g, rgb2.g) && Equal(rgb1.b, rgb2.b))
+                textBox1.Text = "OK";
+            else
+                textBox1.Text = "WRONG!!!";
             pictureBox1.Image = Image.FromFile("../../PicForTask3.jpg");
             Bitmap bmp = (Bitmap)pictureBox1.Image;
+            Color c;
             for (int y = 0; y < bmp.Height; y++)
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    RGB original_rgb = new RGB (c.R, c.G, c.B);
-                    HSV original_hsv = RGB_HSV(original_rgb, x, y);
-                    RGB modifided_rgb = HSV_RGB(original_hsv);
-                    //if (x == 92 && y == 182)
-                    //{
-                    //    original_rgb.r *= 1;
-                    //    original_rgb.g *= 1;
-                    //    original_rgb.b *= 1;
-                    //    original_hsv.h *= 1;
-                    //    original_hsv.s *= 1;
-                    //    original_hsv.v *= 1;
-                    //    modifided_rgb.r *= 1;
-                    //    modifided_rgb.g *= 1;
-                    //    modifided_rgb.b *= 1;
-                    //}
-                    bmp.SetPixel(x, y, Color.FromArgb(255, (int)modifided_rgb.r , (int)modifided_rgb.g, (int)modifided_rgb.b));
+                    c = bmp.GetPixel(x, y);
+                    original_rgb = new RGB(c.R / 255.0, c.G / 255.0, c.B / 255.0);
+                    original_hsv = RGB_HSV(original_rgb);
                 }
-            pictureBox1.Image = (Bitmap)bmp;
         }
-        //преобразование RGB->HSV
-        HSV RGB_HSV(RGB rgb, int x, int y)
+
+        HSV RGB_HSV(RGB rgb)
         {
-            HSV hsv = new HSV(0, 0, 0);
-            rgb.r /= 255;
-            rgb.g /= 255;
-            rgb.b /= 255;
-            int max = Math.Max((int)rgb.r, Math.Max((int)rgb.g, (int)rgb.b));
-            int min = Math.Min((int)rgb.r, Math.Min((int)rgb.g, (int)rgb.b));
-            bool f = false;
-            if (max == min) hsv.h = 0;
+            HSV hsv = new HSV(0.0, 0.0, 0.0);
+            double max = Math.Max(rgb.r, Math.Max(rgb.g, rgb.b));
+            double min = Math.Min(rgb.r, Math.Min(rgb.g, rgb.b));
+            if (Equal(max, min)) hsv.h = 0.0;
             else 
             {
-                if(max == rgb.r)
+                if(Equal(max, rgb.r))
                 {
-                    hsv.h = 60 * ((rgb.g - rgb.b) / (max - min));
+                    hsv.h = 60.0 * ((rgb.g - rgb.b) / (max - min));
                     if (rgb.g < rgb.b)
                         hsv.h += 360;
                 }
                 else
                 {
-                    if (max == rgb.g)
-                    {
-                        hsv.h = 60 * ((rgb.b - rgb.r) / (max - min)) + 120;
-                        //if (x == 92 && y == 182) 
-                            //f = true;
-                    }
+                    if (Equal(max, rgb.g))
+                        hsv.h = 60.0 * ((rgb.b - rgb.r) / (max - min)) + 120;
                     else
                     {
-                        if (max == rgb.b)
-                            hsv.h = 60 * ((rgb.r - rgb.g) / (max - min)) + 240;
+                        if (Equal(max, rgb.b))
+                            hsv.h = 60.0 * ((rgb.r - rgb.g) / (max - min)) + 240;
                     }
                 }
             }
-            if (max == 0) hsv.s = 0;
+            if (Equal(max, 0.0)) hsv.s = 0.0;
             else hsv.s = 1 - (min / max);
             hsv.v = max;
-            hsv.s *= 100;
-            hsv.v *= 100;
             return hsv;
         }
-        //преобразование HSV->RGB
+        
         RGB HSV_RGB(HSV hsv)
         {
-            RGB rgb = new RGB(0,0,0);
-            double vmin = ((100 - hsv.s) * hsv.v) / 100;
-            double a = (hsv.v - vmin) * (hsv.h % 60) / 60;
-            double vinc = vmin + a;
-            double vdec = vmin - a;
-            int hi = (int)Math.Floor((hsv.h / 60)) % 6;
+            RGB rgb = new RGB(0.0,0.0,0.0);
+            double hi = Math.Floor(hsv.h / 60.0) % 6;
+            double f = hsv.h / 60.0 - Math.Floor(hsv.h / 60.0);
+            double p = hsv.v*(1 - hsv.s);
+            double q = hsv.v*(1 - f*hsv.s);
+            double t = hsv.v*(1-(1 - f)*hsv.s);
             switch(hi)
             {
                 case 0:
                     rgb.r = hsv.v;
-                    rgb.g = vinc;
-                    rgb.b = vmin;
+                    rgb.g = t;
+                    rgb.b = p;
                     break;
                 case 1:
-                    rgb.r = vdec;
+                    rgb.r = q;
                     rgb.g = hsv.v;
-                    rgb.b = vmin;
+                    rgb.b = p;
                     break;
                 case 2:
-                    rgb.r = vmin;
+                    rgb.r = p;
                     rgb.g = hsv.v;
-                    rgb.b = vinc;
+                    rgb.b = t;
                     break;
                 case 3:
-                    rgb.r = vmin;
-                    rgb.g = vdec;
+                    rgb.r = p;
+                    rgb.g = q;
                     rgb.b = hsv.v;
                     break;
                 case 4:
-                    rgb.r = vinc;
-                    rgb.g = vmin;
+                    rgb.r = t;
+                    rgb.g = p;
                     rgb.b = hsv.v;
                     break;
                 case 5:
                     rgb.r = hsv.v;
-                    rgb.g = vmin;
-                    rgb.b = vdec;
+                    rgb.g = p;
+                    rgb.b = q;
                     break;
                 default:
                     break;
             }
-            rgb.r *= 2.55;
-            rgb.g *= 2.55;
-            rgb.b *= 2.55;
             return rgb;
+        }
+
+        void change_by_tracks()
+        {
+            RGB modifided_rgb;
+            double H = trackBar1.Value;
+            double S = trackBar2.Value / 100.0;
+            double V = trackBar3.Value / 100.0;
+            Bitmap bmp = (Bitmap)pictureBox1.Image;
+            for (int y = 0; y < bmp.Height; y++)
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    HSV new_hsv = original_hsv;
+                    new_hsv.h += H;
+                    if (new_hsv.h > 360)
+                        new_hsv.h -= 360;
+                    if (new_hsv.h < 0)
+                        new_hsv.h += 360;
+                    new_hsv.s += S;
+                    new_hsv.s = Math.Min(1, new_hsv.s);
+                    new_hsv.s = Math.Max(0, new_hsv.s);
+                    new_hsv.v += V;
+                    new_hsv.v = Math.Min(1, new_hsv.v);
+                    new_hsv.v = Math.Max(0, new_hsv.v);
+                    modifided_rgb = HSV_RGB(new_hsv);
+                    bmp.SetPixel(x, y, Color.FromArgb(255, (int)modifided_rgb.r*255, (int)modifided_rgb.g*255, (int)modifided_rgb.b*255));
+                }
+            pictureBox1.Image = (Bitmap)bmp;
+        }
+
+        void save_to_file()
+        {
+            if (pictureBox1.Image != null)
+            {
+                SaveFileDialog save = new SaveFileDialog();
+                save.Title = "Save image as...";
+                save.OverwritePrompt = true;
+                save.CheckPathExists = true;
+                save.Filter = "Image Files(*.jpg)|*.jpg|All files (*.*)|*.*";
+                save.ShowHelp = true;
+                if (save.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        pictureBox1.Image.Save(save.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unable to save image", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            pictureBox1.Image = Image.FromFile("../../PicForTask3.jpg");
-            Bitmap bmp = (Bitmap)pictureBox1.Image;
-            for (int y = 100; y < bmp.Height; y++)
-                for (int x = 100; x < bmp.Width; x++)
-                {
-                    //Color c = bmp.GetPixel(x, y);
-                    //RGB original_rgb = new RGB(c.R, c.G, c.B);
-                    //HSV original_hsv = RGB_HSV(original_rgb);
-                    //HSV modifided_hsv = взять из ползунков
-                    //RGB modifided_rgb = HSV_RGB(modifided_hsv);
-                    //bmp.SetPixel(x, y, Color.FromArgb(255, modifided_rgb.r, modifided_rgb.g, modifided_rgb.b));
-                }
-            pictureBox1.Image = (Bitmap)bmp;
+            change_by_tracks();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            save_to_file();
         }
     }
 }
